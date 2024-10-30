@@ -1,69 +1,72 @@
-import { handleGetProductLocalStorage } from "../persistence/localStorage"
+import { setProductActive } from '../../main'
+import { handleGetProductsLocalStorage, setProductsLocalStorage } from '../persistence/localStorage'
+import { handleProductActive } from '../services/products'
 
 export const handleGetProductsToStore = () => {
-  const products = handleGetProductLocalStorage()
-  handleRenderList(products)
-}
-
-export const handleRenderList = (products) => {
-  const hamburguesas = products.filter((el) => el.categoria === "Hamburguesas")
-  const papas = products.filter((el) => el.categoria === "Papas")
-  const gaseosas = products.filter((el) => el.categoria === "Gaseosas")
-
-  const renderProductsGroup = (productos, titulo) => {
-    if (productos.length > 0) {
-      const productosHTML = productos.map((producto, idx) => {
-        return `
-          <article class="products" id="product-${producto.categoria}-${idx}">
-            <figure>
-              <img src="${producto.img}" alt="${producto.nombre}" />
-            </figure>
-            <header>
-              <h2>${producto.nombre}</h2>
-            </header>
-            <section class="products__props">
-              <p>
-                <b>Precio:</b> $${producto.precio}
-              </p>
-            </section>
-          </article>
-        `
-      })
-      return `
-      <section class="store">
-        <div class="store__title">
-          <h3>${titulo}</h3>
-        </div>
-        <div class="store__products">
-          ${productosHTML.join("")}
-        </div>
-      </section>
-      `
-    } else { return "" }
+  const product = handleGetProductsLocalStorage()
+  if (product) {
+    handleRenderListItems(product)
+  } else {
+    setProductsLocalStorage()
   }
+}
+export const handleRenderListItems = productsIn => {
+  const burgers = productsIn.filter(el => el.categoria === 'Hamburguesas')
+  const drinks = productsIn.filter(el => el.categoria === 'Gaseosas')
+  const potatos = productsIn.filter(el => el.categoria === 'Papas')
 
-  const storeContainer = document.getElementById("store")
+  const renderProductGroup = (productos, title) => {
+    if (productos.length > 0) {
+      const productosHTML = productos.map((producto, index) => {
+        return `
+        <div class='cardContainer' id='product-${producto.categoria}-${index}'>
+          <div class='cardItem'>
+            <img src="${producto.imagen}" alt="${producto.nombre}" />
+            <div class='cardItem__description'>
+              <div class=titleItem>
+                <h2>${producto.nombre}</h2>
+              </div>
+              <div class='itemprop'>
+                <p><b>Precio:</b> $${producto.precio}</p>
+                <p><b>Categoría:</b> ${producto.categoria}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `
+      })
 
-  storeContainer.innerHTML = `
-    ${renderProductsGroup(hamburguesas, "Hamburguesas")}
-    ${renderProductsGroup(papas, "Papas")}
-    ${renderProductsGroup(gaseosas, "Gaseosas")}
+      return `
+        <section class='main-category' >
+        <h3 class='catregory-title'>${title}</h3>
+        <div class="category-container">
+        ${productosHTML.join('')}</div>
+        </section>
+    `
+    } else {
+      return ''
+    }
+  }
+  const appContainer = document.getElementById('store')
+  appContainer.innerHTML = `
+    ${renderProductGroup(burgers, 'Hamburguesas')}
+    ${renderProductGroup(potatos, 'Papas')}
+    ${renderProductGroup(drinks, 'Gaseosas')}
   `
 
-  const addEvents = (productos) => {
-    productos.forEach((prod, idx) => {
+  const addEvents = productsIn => {
+    productsIn.forEach((producto, index) => {
       const productContainer = document.getElementById(
-        `product-${prod.categoria}-${idx}`
+        `product-${producto.categoria}-${index}`
       )
-
       productContainer.addEventListener('click', () => {
-        console.log("Producto activo ", prod)
+        setProductActive(producto)
+        handleProductActive(producto)
       })
-    });
+    })
   }
 
-  addEvents(hamburguesas)
-  addEvents(papas)
-  addEvents(gaseosas)
+  addEvents(burgers)
+  addEvents(potatos)
+  addEvents(drinks)
 }
-

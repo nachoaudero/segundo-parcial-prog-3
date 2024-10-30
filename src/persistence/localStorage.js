@@ -1,24 +1,19 @@
-export const handleGetProductLocalStorage = () => {
-  const products = JSON.parse(localStorage.getItem("products"))
-  if (products) {
-    return products
-  } else {
-    return []
-  }
+export const handleGetProductsLocalStorage = () => {
+  return JSON.parse(localStorage.getItem('products'))
 }
 
-export const setInLocalStorage = (product) => {
-  let productsInLocal = handleGetProductLocalStorage()
+export const setProductsLocalStorage = item => {
+  let storedProducts = handleGetProductsLocalStorage() || []
+  if (item) {
+    const existingProductIndex = storedProducts.findIndex(
+      product => product.id === item.id
+    )
 
-  const existingIndex = productsInLocal.findIndex((prod) => {
-    prod.id === product.id
-  })
-
-  if (existingIndex !== -1) {
-    productsInLocal[existingIndex] = product
-  } else {
-    productsInLocal.push(product)
+    if (existingProductIndex !== -1) {
+      storedProducts[existingProductIndex] = item
+    } else {
+      storedProducts.push(item)
+    }
   }
-
-  localStorage.setItem("products", JSON.stringify(productsInLocal))
+  localStorage.setItem('products', JSON.stringify(storedProducts))
 }

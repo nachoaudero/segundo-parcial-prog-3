@@ -29,7 +29,7 @@
           </button>
         </div>
         <div>
-          <button class="header__button add__button">
+          <button id="buttonAddElement" class="header__button add__button">
             Agregar producto<span class="material-symbols-outlined">add</span>
           </button>
         </div>
@@ -38,7 +38,44 @@
   </header>
 
   <!-- MAIN -->
+  <main>
+    <section class="main__container">
+      <aside class="main__list">
+        <h2>
+          Categorias <span class="material-symbols-outlined">filter_list</span>
+        </h2>
+        <ul id="listFilter" />
+      </aside>
+      <article class="main__store" id="store" />
+    </section>
 
+    <!-- MODAL -->
+    <section id="modalPopUp" class="pop_up__container">
+      <div class="pop_up">
+        <header class="pop_up__title">
+          <h1>Agregar o modificar un producto</h1>
+        </header>
+        <section class="pop_up__inputs">
+          <input type="text" placeholder="Ingresar nombre del producto" id="nombre">
+          <input type="text" placeholder="Ingresar la imagen del producto" id="img">
+          <input type="number" placeholder="Ingresar precio" value="0" id="precio">
+          <select id="categoria">
+            <option>Seleccione una categoria</option>
+            <option>Hamburguesas</option>
+            <option>Papas</option>
+            <option>Gaseosas</option>
+          </select>
+        </section>
+        <div class="pop_up__buttons">
+          <button class="pop_up__button cancel" id="cancelButton">Cancelar</button>
+          <button class="pop_up__button accept" id="acceptButton">Aceptar</button>
+          <button class="pop_up__button delete" id="deleteButton">Eliminar</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="main.js"></script>
 </body>
 
 </html>
